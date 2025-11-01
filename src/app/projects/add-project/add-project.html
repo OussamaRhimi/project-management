@@ -1,0 +1,157 @@
+<header class="mb-6">
+  <h2 class="text-2xl font-bold text-gray-800">Ajouter un projet</h2>
+</header>
+
+<form #projectForm="ngForm" (ngSubmit)="onSubmit(projectForm)" class="bg-white p-6 rounded-lg shadow-md">
+  <!-- Nom du projet -->
+  <div class="mb-4">
+    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nom du projet</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      [(ngModel)]="project.name"
+      required
+      minlength="4"
+      #name="ngModel"
+      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <div *ngIf="name.invalid && name.touched" class="text-red-500 text-sm mt-1">
+      <div *ngIf="name.errors?.['required']">Le nom du projet est obligatoire.</div>
+      <div *ngIf="name.errors?.['minlength']">Le nom du projet doit comporter au moins 4 caractères.</div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="mb-4">
+    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      [(ngModel)]="project.description"
+      required
+      #description="ngModel"
+      rows="4"
+      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    ></textarea>
+    <div *ngIf="description.invalid && description.touched" class="text-red-500 text-sm mt-1">
+      La description est obligatoire.
+    </div>
+  </div>
+
+  <!-- Statut -->
+  <div class="mb-6">
+    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+    <select
+      id="status"
+      name="status"
+      [(ngModel)]="project.status"
+      required
+      #status="ngModel"
+      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Sélectionnez un statut</option>
+      <option value="En cours">En cours</option>
+      <option value="Terminé">Terminé</option>
+      <option value="En attente">En attente</option>
+    </select>
+    <div *ngIf="status.invalid && status.touched" class="text-red-500 text-sm mt-1">
+      Le statut ne doit pas être vide.
+    </div>
+  </div>
+
+  <!-- Ajouter des tâches -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Ajouter des tâches</h3>
+
+    <!-- Formulaire pour nouvelle tâche -->
+    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="taskTitle" class="block text-sm font-medium text-gray-700 mb-1">Titre de la tâche</label>
+          <input
+            type="text"
+            id="taskTitle"
+            [(ngModel)]="newTask.title"
+            name="taskTitle"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Titre de la tâche"
+          />
+        </div>
+        <div>
+          <label for="taskPriority" class="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+          <select
+            id="taskPriority"
+            [(ngModel)]="newTask.priority"
+            name="taskPriority"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Priorité</option>
+            <option value="Haute">Haute</option>
+            <option value="Moyenne">Moyenne</option>
+            <option value="Basse">Basse</option>
+          </select>
+        </div>
+        <div>
+          <label for="taskStatus" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+          <select
+            id="taskStatus"
+            [(ngModel)]="newTask.status"
+            name="taskStatus"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Statut</option>
+            <option value="En cours">En cours</option>
+            <option value="Terminé">Terminé</option>
+            <option value="En attente">En attente</option>
+          </select>
+        </div>
+      </div>
+      <button
+        type="button"
+        (click)="addTask()"
+        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+      >
+        Ajouter la tâche
+      </button>
+    </div>
+
+    <!-- Liste des tâches ajoutées -->
+    <div *ngIf="project.tasks.length > 0">
+      <h4 class="text-md font-medium text-gray-700 mb-2">Tâches ajoutées:</h4>
+      <ul class="space-y-2">
+        <li *ngFor="let task of project.tasks; let i = index" class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
+          <div>
+            <span class="font-medium">{{ task.title }}</span>
+            <span class="text-sm text-gray-600 ml-2">({{ task.priority }} - {{ task.status }})</span>
+          </div>
+          <button
+            type="button"
+            (click)="removeTask(i)"
+            class="text-red-500 hover:text-red-700"
+          >
+            Supprimer
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Boutons -->
+  <div class="flex gap-4">
+    <button
+      type="submit"
+      [disabled]="projectForm.invalid"
+      class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+    >
+      Enregistrer
+    </button>
+    <button
+      type="button"
+      (click)="onReset(projectForm)"
+      class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+    >
+      Réinitialiser
+    </button>
+  </div>
+</form>

@@ -6,8 +6,10 @@
     <p class="text-gray-600 mt-2">Suivi des projets et des tâches</p>
   </header>
 
-  <main class="max-w-4xl mx-auto">
-    <app-project-list></app-project-list>
+  <main class="max-w-4xl mx-auto space-y-8">
+    <app-add-project (projectAdded)="onProjectAdded($event)"></app-add-project>
+    <app-edit-project [project]="selectedProject" (projectUpdated)="onProjectUpdated($event)"></app-edit-project>
+    <app-project-list [projects]="projects" (projectSelected)="onSelectProject($event)"></app-project-list>
   </main>
 </div>
 
