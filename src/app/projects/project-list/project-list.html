@@ -1,0 +1,111 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Search & Filter Section -->
+    <div class="mb-8 flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+      <!-- Search Input -->
+      <div class="relative flex-1">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          [(ngModel)]="searchTerm"
+          placeholder="Rechercher un projet..."
+          class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
+        />
+      </div>
+
+      <!-- Filter By Dropdown -->
+      <select
+        [(ngModel)]="filterBy"
+        class="px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 backdrop-blur-sm text-sm min-w-[150px]"
+      >
+        <option value="all">Tous les champs</option>
+        <option value="name">Nom du projet</option>
+        <option value="description">Description</option>
+        <option value="status">Statut</option>
+        <option value="tasks">Tâches (titre, priorité, statut)</option>
+      </select>
+    </div>
+
+    <!-- Projects Grid -->
+    @if (filteredProjects.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (project of filteredProjects; track project.name) {
+          <div 
+            class="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+          >
+            <!-- Status Badge -->
+            <span 
+              class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold shadow-md"
+              [ngClass]="{
+                'bg-blue-500 text-white': project.status === 'En cours',
+                'bg-green-500 text-white': project.status === 'Terminé',
+                'bg-yellow-500 text-white': project.status === 'En attente'
+              }"
+            >
+              {{ project.status }}
+            </span>
+
+            <!-- Content -->
+            <div class="relative z-10"><br/>
+              <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                {{ project.name }}
+              </h3>
+              <p class="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">
+                {{ project.description }}
+              </p>
+
+              <!-- Progress Bar -->
+              <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-sm font-medium text-gray-700">Progression</span>
+                  <span class="text-sm font-semibold text-gray-900">
+                    {{ getProjectProgress(project) | number:'1.0-0' }}%
+                  </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div 
+                    class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-1000 ease-out origin-left"
+                    [style.width.%]="getProjectProgress(project)"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Action Button -->
+              <button
+                (click)="onSelectProject(project)"
+                class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold shadow-sm hover:from-blue-600 hover:to-blue-700 hover:shadow-lg transition-all"
+              >
+                Voir les détails →
+              </button>
+
+              <!-- Recent Tasks -->
+              <div class="mt-6 pt-4 border-t border-gray-100">
+                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Tâches récentes</h4>
+                <app-task-list [tasks]="project.tasks.slice(0, 2)"></app-task-list>
+              </div>
+            </div>
+
+            <!-- Decorative Element -->
+            <div class="absolute bottom-0 left-0 w-20 h-20 bg-purple-200 rounded-full opacity-20 translate-x-10 translate-y-10 group-hover:scale-110 transition-transform"></div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center py-12">
+        <div class="mx-auto h-16 w-16 text-gray-400 mb-4">🔍</div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun projet trouvé</h3>
+        <p class="text-gray-500">Essayez de modifier votre recherche ou filtre.</p>
+      </div>
+    }
+
+    <!-- Project Details -->
+    @if (selectedProject) {
+      <div class="mt-8">
+        <app-project-detail [project]="selectedProject"></app-project-detail>
+      </div>
+    }
+  </div>
+</div>
