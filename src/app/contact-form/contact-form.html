@@ -1,0 +1,126 @@
+<div class="contact-form-container">
+  <h2>Formulaire de Contact</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Question 1 : Premier formulaire réactif -->
+    <div class="form-group">
+      <label for="email">Email (Question 1)</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="form-control"
+        [class.is-invalid]="email?.invalid && email?.touched"
+        placeholder="Entrez votre email"
+      />
+      <!-- Question 2 : Messages d'erreur -->
+      <div *ngIf="email?.invalid && email?.touched" class="error-messages">
+        <small *ngIf="email?.errors?.['required']">Email est requis</small>
+        <small *ngIf="email?.errors?.['email']">Format email invalide</small>
+      </div>
+    </div>
+
+    <!-- Question 3 : Formulaire complet -->
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <input
+        type="text"
+        id="nom"
+        formControlName="nom"
+        class="form-control"
+        [class.is-invalid]="nom?.invalid && nom?.touched"
+        placeholder="Entrez votre nom"
+      />
+      <div *ngIf="nom?.invalid && nom?.touched" class="error-messages">
+        <small *ngIf="nom?.errors?.['required']">Nom est requis</small>
+        <small *ngIf="nom?.errors?.['minlength']">
+          Nom doit avoir au moins 2 caractères
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="prenom">Prénom</label>
+      <input
+        type="text"
+        id="prenom"
+        formControlName="prenom"
+        class="form-control"
+        [class.is-invalid]="prenom?.invalid && prenom?.touched"
+        placeholder="Entrez votre prénom"
+      />
+      <div *ngIf="prenom?.invalid && prenom?.touched" class="error-messages">
+        <small *ngIf="prenom?.errors?.['required']">Prénom est requis</small>
+        <small *ngIf="prenom?.errors?.['minlength']">
+          Prénom doit avoir au moins 2 caractères
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email2">Email</label>
+      <input
+        type="email"
+        id="email2"
+        formControlName="email2"
+        class="form-control"
+        [class.is-invalid]="email2?.invalid && email2?.touched"
+        placeholder="Entrez votre email"
+      />
+      <div *ngIf="email2?.invalid && email2?.touched" class="error-messages">
+        <small *ngIf="email2?.errors?.['required']">Email est requis</small>
+        <small *ngIf="email2?.errors?.['email']">Format email invalide</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="telephone">Téléphone (optionnel)</label>
+      <input
+        type="tel"
+        id="telephone"
+        formControlName="telephone"
+        class="form-control"
+        [class.is-invalid]="telephone?.invalid && telephone?.touched"
+        placeholder="0XXXXXXXXX (format français)"
+      />
+      <div *ngIf="telephone?.invalid && telephone?.touched" class="error-messages">
+        <small *ngIf="telephone?.errors?.['pattern']">
+          Format téléphone invalide (ex: 0123456789)
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea
+        id="message"
+        formControlName="message"
+        class="form-control"
+        [class.is-invalid]="message?.invalid && message?.touched"
+        placeholder="Entrez votre message (min 10 caractères)"
+        rows="5"
+      ></textarea>
+      <div *ngIf="message?.invalid && message?.touched" class="error-messages">
+        <small *ngIf="message?.errors?.['required']">Message est requis</small>
+        <small *ngIf="message?.errors?.['minlength']">
+          Message doit avoir au moins 10 caractères
+        </small>
+      </div>
+    </div>
+
+    <!-- Bouton submit désactivé si formulaire invalide -->
+    <button
+      type="submit"
+      class="btn-submit"
+      [disabled]="form.invalid"
+    >
+      Envoyer
+    </button>
+
+    <!-- Afficher la valeur du formulaire en JSON -->
+    <div class="form-value">
+      <h3>Valeur du formulaire:</h3>
+      <pre>{{ form.value | json }}</pre>
+    </div>
+  </form>
+</div>

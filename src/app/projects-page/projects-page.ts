@@ -1,18 +1,35 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { NavbarComponent } from "./navbar/navbar";
+import { ProjectList } from "../projects/project-list/project-list";
+import { AddProject } from "../projects/add-project/add-project";
+import { EditProject } from "../projects/edit-project/edit-project";
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-projects-page',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  imports: [ProjectList, AddProject, EditProject],
+  template: `
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+      <header class="max-w-4xl mx-auto text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-indigo-700 drop-shadow-sm">
+          📌 Gestion de Projets
+        </h1>
+        <p class="text-gray-600 mt-2">Suivi des projets et des tâches</p>
+      </header>
+
+      <main class="max-w-4xl mx-auto space-y-8">
+        <app-add-project (projectAdded)="onProjectAdded($event)"></app-add-project>
+        <app-edit-project [project]="selectedProject" (projectUpdated)="onProjectUpdated($event)"></app-edit-project>
+        <app-project-list [projects]="projects" (projectSelected)="onSelectProject($event)"></app-project-list>
+      </main>
+    </div>
+  `
 })
-export class AppComponent {
+export class ProjectsPageComponent {
+  selectedProject: any = null;
+
   projects = [
     {
-      name: 'Refonte Site Web',
+      name: 'Refonte du site web',
       description: 'Améliorer l\'UX, l\'accessibilité et la compatibilité mobile du site.',
       status: 'En cours',
       createdDate: '2025-10-15',
@@ -82,8 +99,6 @@ export class AppComponent {
       ]
     }
   ];
-
-  selectedProject: any;
 
   onSelectProject(project: any) {
     this.selectedProject = project;

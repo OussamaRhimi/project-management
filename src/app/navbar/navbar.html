@@ -1,0 +1,43 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo/Brand -->
+    <div class="navbar-brand">
+      <a routerLink="/" class="brand-link">
+        <span class="logo">📋</span>
+        <span class="brand-text">Project Manager</span>
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" (click)="toggleMenu()" [class.active]="isMenuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Navigation Menu -->
+    <ul class="nav-menu" [class.active]="isMenuOpen">
+      <li class="nav-item">
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMenu()"
+          class="nav-link"
+        >
+          🏠 Projets
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          routerLink="/contact"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="nav-link"
+        >
+          📧 Contact
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
